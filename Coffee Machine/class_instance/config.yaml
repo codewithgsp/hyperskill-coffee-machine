@@ -1,0 +1,8 @@
+filename: abc.txt
+date_available: yes
+date_format: yyyyMMdd
+path: /data/sdbe/dabc/s2/
+parameters:
+  - header: true
+  - format: parquet
+
