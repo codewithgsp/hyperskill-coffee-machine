@@ -4,5 +4,5 @@ class User:
     users = []
 
     def __init__(self, active, user_name):
-        self.active = True
+        self.active = active
         self.user_name = user_name
