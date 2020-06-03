@@ -11,4 +11,3 @@ class PiggyBank:
         else:
             self.cents += deposit_cents
             self.dollars += deposit_dollars
-
