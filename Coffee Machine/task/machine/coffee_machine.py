@@ -1,105 +1,94 @@
-# Write your code here
-# initial resources
-water_qty = 400
-milk_qty = 540
-coffee_beans_qty = 120
-disposable_cup_qty = 9
-total_amount = 550
+class CoffeeMachine:
 
+    # class instance, as these should be shared for each instance
+    water_qty = 400
+    milk_qty = 540
+    coffee_beans_qty = 120
+    dispo_cup_qty = 9
+    total_money = 550
 
-def machine_display(water_, milk_, beans_, cups_, amount_):
-    print('''The coffee machine has:
-    {water_qty} of water
-    {milk_qty} of milk
-    {coffee_beans_qty} of coffee beans
-    {disposable_cups} of disposable cups
-    {total_amount} of money
-    '''.format(water_qty=water_,
-               milk_qty=milk_,
-               coffee_beans_qty=beans_,
-               disposable_cups=cups_,
-               total_amount=amount_))
+    def determine_action(self, action):
+        if action == 'remaining':
+            self.remaining(CoffeeMachine.water_qty,
+                           CoffeeMachine.milk_qty,
+                           CoffeeMachine.coffee_beans_qty,
+                           CoffeeMachine.dispo_cup_qty,
+                           CoffeeMachine.total_money)
+        elif action == 'take':
+            self.take()
 
+        elif action == 'fill':
+            self.fill()
 
-def calculate_resources(water_, milk_, beans_, cups_, cost_):
-    global water_qty, milk_qty, coffee_beans_qty, disposable_cup_qty, total_amount
+        elif action == 'buy':
+            print(self.buy())
 
-    if water_qty - water_ < 0:
-        print('Sorry, not enough water!')
-        return False
-    water_qty -= water
+    def remaining(self, water, milk, coffee_beans, dispo_cup, money):
+        print('The coffee machine has:\n'
+              '{} of water\n{} of milk\n'
+              '{} of coffee beans\n'
+              '{} of disposable cups\n'
+              '${} of money'.format(water, milk, coffee_beans, dispo_cup, money))
 
-    if milk_qty - milk_ < 0:
-        print('Sorry, not enough milk!')
-        return False
-    milk_qty -= milk_
+    def take(self):
+        amount_given = CoffeeMachine.total_money
+        CoffeeMachine.total_money -= amount_given
+        print('I gave you ${}'.format(amount_given))
 
-    if coffee_beans_qty - beans_ < 0:
-        print('Sorry, not enough beans!')
-        return False
-    coffee_beans_qty -= beans_
-
-    if disposable_cup_qty - cups_ < 0:
-        print('Sorry, not enough cups!')
-        return False
-    disposable_cup_qty -= cups_
-    total_amount += cost_
-    print('I have enough resources, making you a coffee!')
-    return True
-
-
-while True:
-    print('Write action (buy, fill, take, remaining, exit):')
-    action = input()
-
-    if action == 'buy':
-        print('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:')
+    def buy(self):
+        print('What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:')
         beverage_type = input()
         if beverage_type != 'back':
             cup = 1  # since 1 cup of beverage is always ordered
             if beverage_type == '1':
-                water = 250
-                beans = 16
-                milk = 0
-                cost = 4
+                water, beans, milk, cost = 250, 16, 0, 4
             elif beverage_type == '2':
-                water = 350
-                beans = 20
-                milk = 75
-                cost = 7
-            else:
-                water = 200
-                beans = 12
-                milk = 100
-                cost = 6
-            if not calculate_resources(water, milk, beans, cup, cost):
-                continue
+                water, beans, milk, cost = 350, 20, 75, 7
+            elif beverage_type == '3':
+                water, beans, milk, cost = 200, 12, 100, 6
 
-    elif action == 'fill':
+            # calculate resources before making a coffee
+            return self.calculate_resources(water, milk, beans, cup, cost)
+        return None
 
+    def fill(self):
         print('Write how many ml of water do you want to add:')
-        water = int(input())
-        water_qty += water
+        CoffeeMachine.water_qty += int(input())
 
         print('Write how many ml of milk do you want to add:')
-        milk = int(input())
-        milk_qty += milk
+        CoffeeMachine.milk_qty += int(input())
 
         print('Write how many grams of coffee beans do you want to add:')
-        beans = int(input())
-        coffee_beans_qty += beans
+        CoffeeMachine.coffee_beans_qty += int(input())
 
         print('Write how many disposable cups of coffee do you want to add:')
-        cups = int(input())
-        disposable_cup_qty += cups
+        CoffeeMachine.dispo_cup_qty += int(input())
 
-    elif action == 'take':
-        amount_given = total_amount
-        total_amount -= amount_given
-        print('I gave you ${amount}'.format(amount=amount_given))
+    def calculate_resources(self, water_, milk_, beans_, cup_, cost_):
+        if CoffeeMachine.water_qty - water_ < 0:
+            return 'Sorry, not enough water!'
+        CoffeeMachine.water_qty -= water_
 
-    elif action == 'remaining':
-        machine_display(water_qty, milk_qty, coffee_beans_qty, disposable_cup_qty, total_amount)
+        if CoffeeMachine.milk_qty - milk_ < 0:
+            return 'Sorry, not enough milk!'
+        CoffeeMachine.milk_qty -= milk_
 
-    elif action == 'exit':
+        if CoffeeMachine.coffee_beans_qty - beans_ < 0:
+            return 'Sorry, not enough beans!'
+        CoffeeMachine.coffee_beans_qty -= beans_
+
+        if CoffeeMachine.dispo_cup_qty - cup_ < 0:
+            return 'Sorry, not enough cups!'
+        CoffeeMachine.dispo_cup_qty -= cup_
+
+        CoffeeMachine.total_money += cost_
+        return 'I have enough resources, making you a coffee!'
+
+
+while True:
+    print('Write action (buy, fill, take, remaining, exit):')
+    response = input()
+    if response == 'exit':
         break
+    coffee_machine = CoffeeMachine()
+    coffee_machine.determine_action(response)
