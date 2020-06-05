@@ -1,3 +1,4 @@
+# this is the new class
 class CoffeeMachine:
 
     # class instance, as these should be shared for each instance
